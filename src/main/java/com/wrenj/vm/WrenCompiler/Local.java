@@ -4,8 +4,7 @@ public class Local {
     // The name of the local variable. This points directly into the original
     // source code string.
     //const char* name;
-    String nameStr;
-    long nameLoc;
+    String name;
 
     // The length of the local variable's name.
     int length;

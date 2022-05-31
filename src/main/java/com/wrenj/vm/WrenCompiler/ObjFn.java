@@ -33,6 +33,10 @@ public class ObjFn {
     // only be set for fns, and not ObjFns that represent methods or scripts.
     int arity;
     FnDebug debug;
+    public ObjFn(ObjModule module, int maxSlots) {
+        this.module = module;
+        this.maxSlots = maxSlots;
+    }
 }
 class FnDebug {
     ArrayList<Integer> sourceLines;

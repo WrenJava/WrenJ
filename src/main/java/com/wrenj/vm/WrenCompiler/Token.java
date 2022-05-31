@@ -3,16 +3,16 @@ package com.wrenj.vm.WrenCompiler;
 import com.wrenj.vm.WrenValue.Value;
 
 public class Token {
-    TokenType type;
+    public TokenType type;
 
     // The beginning of the token, pointing directly into the source.
-    long start;
+    public long start;
 
     // The length of the token in characters.
-    int length;
+    public int length;
 
     // The 1-based line where the token appears
-    int line;
+    public int line;
 
     // The parsed value if the token is a literal.
     Value value;
