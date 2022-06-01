@@ -1,9 +1,9 @@
 package com.wrenj.vm.WrenCompiler;
 
 import com.wrenj.vm.WrenVM.Obj;
-
 import java.util.ArrayList;
 
+// Bookkeeping information for compiling a class definition.
 public class ClassInfo {
     // The name of the class.
     String name;

@@ -16,5 +16,4 @@ public class Token {
 
     // The parsed value if the token is a literal.
     public Value value;
-
 }

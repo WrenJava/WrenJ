@@ -4,8 +4,7 @@ import com.wrenj.vm.WrenVM.Obj;
 
 import java.util.Optional;
 
-
-public class Value {
-    public ValueType type;
-    public ValueUnion as;
+public class ValueUnion {
+    public Optional<Obj> obj;
+    public Optional<Double> num;
 }

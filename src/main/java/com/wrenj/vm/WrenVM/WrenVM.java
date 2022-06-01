@@ -287,4 +287,12 @@ public class WrenVM {
         //TODO::implement this
         System.exit(-1);
     }
+
+    //MARK: Stuff below this might be reimplemented, but it will break stuff
+    public void wrenPushRoot(Optional<Obj> obj) {
+        assert obj.isPresent();
+        assert this.numTempRoots < WREN_MAX_TEMP_ROOTS;
+
+        this.tempRoots[this.numTempRoots++] = obj.get();
+    }
 }
