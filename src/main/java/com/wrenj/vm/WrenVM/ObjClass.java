@@ -1,6 +1,7 @@
 package com.wrenj.vm.WrenVM;
 
 import com.wrenj.vm.WrenValue.Value;
+import com.wrenj.vm.unimplemented.MethodBuffer;
 
 import java.util.ArrayList;
 
@@ -20,7 +21,7 @@ public class ObjClass {
     // You can think of it as a hash table that never has collisions but has a
     // really low load factor. Since methods are pretty small (just a type and a
     // pointer), this should be a worthwhile trade-off.
-    ArrayList<Integer> methods;
+    MethodBuffer methods;
 
     // The name of the class.
     String name;
