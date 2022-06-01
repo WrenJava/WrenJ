@@ -1,11 +1,8 @@
 package com.wrenj.vm.unimplemented;
 
 @Deprecated
-public class Code {
+public class ObjMap {
     static {
-        System.exit(-1);
-    }
-    public Code() {
         System.exit(-1);
     }
 }
