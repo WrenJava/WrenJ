@@ -119,6 +119,110 @@ public class WrenVM {
         System.exit(-1);
     }
 
+    @Deprecated
+    Object wrenReallocate(Object memory, long oldSize, long newSize) {
+        //TODO::implement
+        System.exit(-1);
+        return null;
+    }
+
+    @Deprecated
+    ObjUpValue captureUpValue(ObjFiber fiber, Value local) {
+        // If there are no open upvalues at all, we must need a new one.
+        if (fiber.openUpvalues == null)
+        {
+            fiber.openUpvalues = null; //TODO:: = wrenNewUpvalue(vm, local);
+            System.exit(-1);
+            return fiber.openUpvalues;
+        }
+
+        ObjUpValue prevUpvalue = null;
+        ObjUpValue upvalue = fiber.openUpvalues;
+
+        // Walk towards the bottom of the stack until we find a previously existing
+        // upvalue or pass where it should be.
+        while (upvalue != null /*TODO && upvalue.value > local*/)
+        {
+            prevUpvalue = upvalue;
+            upvalue = upvalue.next;
+        }
+        System.exit(-1);
+
+        // Found an existing upvalue for this local.
+        if (upvalue != null && upvalue.value == local) return upvalue;
+
+        // We've walked past this local on the stack, so there must not be an
+        // upvalue for it already. Make a new one and link it in in the right
+        // place to keep the list sorted.
+        ObjUpValue createdUpvalue = null; //TODO = wrenNewUpvalue(vm, local);
+        if (prevUpvalue == null)
+        {
+            // The new one is the first one in the list.
+            fiber.openUpvalues = createdUpvalue;
+        }
+        else
+        {
+            prevUpvalue.next = createdUpvalue;
+        }
+
+        createdUpvalue.next = upvalue;
+        return createdUpvalue;
+    }
+
+    // Closes any open upvalues that have been created for stack slots at [last]
+    // and above.
+    @Deprecated
+    void closeUpValues(ObjFiber fiber, Value last) {
+        while (fiber.openUpvalues != null /*TODO&& fiber.openUpvalues.value >= last*/)
+        {
+            System.exit(-1);
+            ObjUpValue upvalue = fiber.openUpvalues;
+
+            // Move the value into the upvalue itself and point the upvalue to it.
+            //TODO::implement this
+            /*
+            upvalue->closed = *upvalue->value;
+            upvalue->value = &upvalue->closed;
+
+            // Remove it from the open upvalue list.
+            fiber->openUpvalues = upvalue->next;
+             */
+        }
+    }
+
+    //TODO::figure out how this fits
+    /*WrenForeignMethodFn findForeignMethod(String moduleName, String className, boolean isStatic, String signature) {
+        WrenForeignMethodFn method = NULL;
+
+        if (vm->config.bindForeignMethodFn != NULL)
+        {
+            method = vm->config.bindForeignMethodFn(vm, moduleName, className, isStatic,
+                    signature);
+        }
+
+        // If the host didn't provide it, see if it's an optional one.
+        if (method == NULL)
+        {
+        #if WREN_OPT_META
+                    if (strcmp(moduleName, "meta") == 0)
+                    {
+                        method = wrenMetaBindForeignMethod(vm, className, isStatic, signature);
+                    }
+        #endif
+        #if WREN_OPT_RANDOM
+                    if (strcmp(moduleName, "random") == 0)
+                    {
+                        method = wrenRandomBindForeignMethod(vm, className, isStatic, signature);
+                    }
+        #endif
+        }
+
+        return method;
+    }
+    */
+
+
+
     //TODO::fix the parameters
     @Deprecated
     private void wrenGrayObj(Object object) {
