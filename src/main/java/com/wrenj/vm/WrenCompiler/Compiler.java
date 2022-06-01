@@ -1,5 +1,6 @@
 package com.wrenj.vm.WrenCompiler;
 
+import com.wrenj.vm.WrenCommon;
 import com.wrenj.vm.WrenCompiler.grammar.Precedence;
 import com.wrenj.vm.WrenCompiler.lexing.Parser;
 import com.wrenj.vm.WrenVM.Obj;
@@ -827,6 +828,40 @@ public class Compiler {
         }
         name[(*length)++] = rightBracket;
          */
+    }
+
+    //length needs to be Integer so it passes by reference.
+    //TODO: please double check over this, this method is very weird
+    @Deprecated
+    void signatureToString(Signature signature, char[] name, Integer length) {
+        length = 0;
+
+        //memcpy(name + length, signature.name, signature.length);
+        length += signature.length;
+        int[] lengthAr = {length.intValue()};
+
+        switch(signature.type) {
+            case SIG_METHOD:
+                signatureParameterList(name, lengthAr, signature.arity, '(', ')');
+            case SIG_GETTER:
+                break;
+            case SIG_SETTER:
+                name[(length)++] = '=';
+                signatureParameterList(name, lengthAr, 1, '(', ')');
+                break;
+            case SIG_SUBSCRIPT_SETTER:
+                signatureParameterList(name, lengthAr, signature.arity, '[', ']');
+                name[(length)++] = '=';
+                signatureParameterList(name, lengthAr, 1, '(', ')');
+            case SIG_INITIALIZER:
+                //memcpy(name, "init ", 5);
+                //memcpy(name + 5, signature.name, signature.length);
+                length = 5 + signature.length;
+                lengthAr[0] = length.intValue();
+                signatureParameterList(name, lengthAr, signature.arity, '(', ')');
+                break;
+        }
+        name[length] = '\0';
     }
 
     @Deprecated
