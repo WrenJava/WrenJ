@@ -19,7 +19,7 @@ public class ObjFiber {
     Value stack;
 
     // A pointer to one past the top-most value on the stack.
-    Value stackTop;
+    public Value stackTop;
 
     // The number of allocated slots in the stack array.
     int stackCapacity;
@@ -41,11 +41,11 @@ public class ObjFiber {
 
     // The fiber that ran this one. If this fiber is yielded, control will resume
     // to this one. May be `NULL`.
-    Optional<ObjFiber> caller;
+    public Optional<ObjFiber> caller;
 
     // If the fiber failed because of a runtime error, this will contain the
     // error object. Otherwise, it will be null.
-    Value error;
+    public Value error;
 
-    FiberState state;
+    public FiberState state;
 }

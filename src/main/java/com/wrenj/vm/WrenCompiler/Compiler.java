@@ -173,7 +173,7 @@ public class Compiler {
     void copyAttributes(ObjMap into) {
         this.numAttributes = 0;
 
-        if (this.attributes.stream().findAny().isEmpty()) {
+        if (!this.attributes.get().stream().findAny().isPresent()) {
             return;
         } else if (into == null) {
             return;

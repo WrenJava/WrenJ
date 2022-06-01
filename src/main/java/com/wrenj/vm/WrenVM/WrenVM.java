@@ -10,6 +10,9 @@ import com.wrenj.vm.unimplemented.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static com.wrenj.vm.WrenVM.FiberState.FIBER_TRY;
+import static com.wrenj.vm.WrenValue.WrenValue.wrenHasError;
+
 public class WrenVM {
     //HEADER FILE
 
@@ -190,37 +193,67 @@ public class WrenVM {
         }
     }
 
-    //TODO::figure out how this fits
-    /*WrenForeignMethodFn findForeignMethod(String moduleName, String className, boolean isStatic, String signature) {
-        WrenForeignMethodFn method = NULL;
 
-        if (vm->config.bindForeignMethodFn != NULL)
-        {
-            method = vm->config.bindForeignMethodFn(vm, moduleName, className, isStatic,
-                    signature);
-        }
-
-        // If the host didn't provide it, see if it's an optional one.
-        if (method == NULL)
-        {
-        #if WREN_OPT_META
-                    if (strcmp(moduleName, "meta") == 0)
-                    {
-                        method = wrenMetaBindForeignMethod(vm, className, isStatic, signature);
-                    }
-        #endif
-        #if WREN_OPT_RANDOM
-                    if (strcmp(moduleName, "random") == 0)
-                    {
-                        method = wrenRandomBindForeignMethod(vm, className, isStatic, signature);
-                    }
-        #endif
-        }
-
-        return method;
+    //TODO::method type is actually an opcode, but we don't have those figured out yet
+    void bindMethod(int methodType, int symbol, ObjModule module, ObjClass classObj, Value methodValue) {
+        //TODO::implement this
+        System.exit(-1);
     }
-    */
 
+    void callForeign(ObjFiber fiber, WrenForeignMethodFn foreign, int numArgs) {
+        if(apiStack == null) {
+            System.err.println("Cannot already be in a foreign call.");
+            System.exit(-1); //This one should not be deleted it actually matches the VM.
+        }
+        apiStack = fiber.stackTop; //TODO - numArgs;
+        System.exit(-1);
+        //TODO make this work
+        // //foreign(this);
+        apiStack = null;
+    }
+
+    // Handles the current fiber having aborted because of an error.
+    //
+    // Walks the call chain of fibers, aborting each one until it hits a fiber that
+    // handles the error. If none do, tells the VM to stop.
+    void runtimeError() {
+        if (!wrenHasError(fiber)) {
+            System.err.println("Should only call this after an error");
+        }
+        ObjFiber current = fiber;
+        Value error = current.error;
+
+        while (current != null)
+        {
+            // Every fiber along the call chain gets aborted with the same error.
+            current.error = error;
+
+            // If the caller ran this fiber using "try", give it the error and stop.
+            if (current.state == FIBER_TRY)
+            {
+                //TODO::fix this
+                /*
+                // Make the caller's try method return the error message.
+                current.caller.get().stackTop[-1] = vm->fiber->error;
+                vm->fiber = current->caller;
+                return;
+
+                 */
+                System.exit(-1);
+            }
+
+            // Otherwise, unhook the caller since we will never resume and return to it.
+            ObjFiber caller = current.caller.get();
+            current.caller = Optional.empty();
+            current = caller;
+        }
+
+        // If we got here, nothing caught the error, so show the stack trace.
+        //TODO::implement this func
+        // //wrenDebugPrintStackTrace(vm);
+        fiber = null;
+        apiStack = null;
+    }
 
 
     //TODO::fix the parameters
