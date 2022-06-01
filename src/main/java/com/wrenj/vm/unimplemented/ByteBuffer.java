@@ -1,5 +1,6 @@
 package com.wrenj.vm.unimplemented;
 
+@Deprecated
 public class ByteBuffer {
     public int count;
     static {

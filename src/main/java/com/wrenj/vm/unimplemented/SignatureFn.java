@@ -1,5 +1,5 @@
 package com.wrenj.vm.unimplemented;
-
+@Deprecated
 public class SignatureFn {
     static {
         System.exit(-1);
