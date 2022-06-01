@@ -1,19 +1,21 @@
 package com.wrenj.vm.WrenCompiler;
 
+import com.wrenj.vm.WrenCompiler.grammar.Precedence;
 import com.wrenj.vm.WrenCompiler.lexing.Parser;
 import com.wrenj.vm.WrenVM.Obj;
 import com.wrenj.vm.WrenVM.WrenVM;
 import com.wrenj.vm.WrenValue.Value;
 import com.wrenj.vm.unimplemented.Code;
+import com.wrenj.vm.unimplemented.GrammarRule;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static com.wrenj.vm.WrenCommon.MAX_PARAMETERS;
 import static com.wrenj.vm.WrenCommon.MAX_VARIABLE_NAME;
 import static com.wrenj.vm.WrenCompiler.Scope.*;
 import static com.wrenj.vm.WrenCompiler.TokenType.*;
-import static com.wrenj.vm.WrenCompiler.WrenCompiler.MAX_LOCALS;
-import static com.wrenj.vm.WrenCompiler.WrenCompiler.MAX_UPVALUES;
+import static com.wrenj.vm.WrenCompiler.WrenCompiler.*;
 
 public class Compiler {
     Parser parser;
@@ -585,6 +587,179 @@ public class Compiler {
          */
     }
 
+    @Deprecated
+    static GrammarRule getRule(TokenType type) {
+        //TODO::implement is forward declaration
+        System.exit(-1);
+        return null;
+    }
+    @Deprecated
+    void expression() {
+        //TODO::implement is forward declaration
+        System.exit(-1);
+    }
+    @Deprecated
+    void statement() {
+        //TODO::implement is forward declaration
+        System.exit(-1);
+    }
+    @Deprecated
+    void definition() {
+        //TODO::implement is forward declaration
+        System.exit(-1);
+    }
+    @Deprecated
+    void parsePrecedence(Precedence precedence) {
+        //TODO::implement is forward declaration
+        System.exit(-1);
+    }
+
+    // Replaces the placeholder argument for a previous CODE_JUMP or CODE_JUMP_IF
+    // instruction with an offset that jumps to the current end of bytecode.
+    void patchJump(int offset)
+    {
+        // -2 to adjust for the bytecode for the jump offset itself.
+        int jump = fn.code.count - offset - 2;
+        if (jump > MAX_JUMP) error("Too much code to jump over.");
+
+        fn.code.data[offset] = (jump >> 8) & 0xff;
+        fn.code.data[offset + 1] = jump & 0xff;
+    }
+
+    // Parses a block body, after the initial "{" has been consumed.
+    //
+    // Returns true if it was a expression body, false if it was a statement body.
+    // (More precisely, returns true if a value was left on the stack. An empty
+    // block returns false.)
+    boolean finishBlock()
+    {
+        // Empty blocks do nothing.
+        if (match(TOKEN_RIGHT_BRACE)) return false;
+
+        // If there's no line after the "{", it's a single-expression body.
+        if (!matchLine())
+        {
+            expression();
+            consume(TOKEN_RIGHT_BRACE, "Expect '}' at end of block.");
+            return true;
+        }
+
+        // Empty blocks (with just a newline inside) do nothing.
+        if (match(TOKEN_RIGHT_BRACE)) return false;
+
+        // Compile the definition list.
+        do
+        {
+            definition();
+            consumeLine("Expect newline after statement.");
+        }
+        while (peek() != TOKEN_RIGHT_BRACE && peek() != TOKEN_EOF);
+
+        consume(TOKEN_RIGHT_BRACE, "Expect '}' at end of block.");
+        return false;
+    }
+
+    // Parses a method or function body, after the initial "{" has been consumed.
+    //
+    // If [Compiler->isInitializer] is `true`, this is the body of a constructor
+    // initializer. In that case, this adds the code to ensure it returns `this`.
+    @Deprecated
+    void finishBody()
+    {
+        boolean isExpressionBody = finishBlock();
+
+
+        if (isInitializer)
+        {
+            //TODO::implement this
+            System.exit(-1);
+            /*
+            // If the initializer body evaluates to a value, discard it.
+            if (isExpressionBody) emitOp(compiler, CODE_POP);
+
+            // The receiver is always stored in the first local slot.
+            emitOp(compiler, CODE_LOAD_LOCAL_0);
+             */
+        }
+        //TODO::implement this
+        System.exit(-1);
+        /*
+        else if (!isExpressionBody)
+        {
+            // Implicitly return null in statement bodies.
+            emitOp(compiler, CODE_NULL);
+        }
+
+        emitOp(compiler, CODE_RETURN);
+
+         */
+    }
+
+    // The VM can only handle a certain number of parameters, so check that we
+    // haven't exceeded that and give a usable error.
+    void validateNumParameters(int numArgs)
+    {
+        if (numArgs == MAX_PARAMETERS + 1)
+        {
+            // Only show an error at exactly max + 1 so that we can keep parsing the
+            // parameters and minimize cascaded errors.
+            error("Methods cannot have more than " + MAX_PARAMETERS + " parameters.");
+        }
+    }
+
+    // Parses the rest of a comma-separated parameter list after the opening
+    // delimeter. Updates `arity` in [signature] with the number of parameters.
+    @Deprecated
+    void finishParameterList(Signature signature)
+    {
+        do
+        {
+            ignoreNewlines();
+            //TODO::implement this
+            System.exit(-1);
+            return;
+            /*
+            validateNumParameters(++signature->arity);
+
+            // Define a local variable in the method for the parameter.
+            declareNamedVariable(compiler);
+             */
+        }
+        while (match(TOKEN_COMMA));
+    }
+
+    // Gets the symbol for a method [name] with [length].
+    @Deprecated
+    int methodSymbol(String name, int length)
+    {
+        //TODO::implement this
+        System.exit(-1);
+        return -1;
+        /*
+        return wrenSymbolTableEnsure(compiler->parser->vm,
+                &compiler->parser->vm->methodNames, name, length);
+         */
+    }
+    void signatureParameterList(char[] name, int[] length, int numParams, char leftBracket, char rightBracket)
+    {
+        //TODO::implement this
+        System.exit(-1);
+        /*
+        name[(*length)++] = leftBracket;
+
+        // This function may be called with too many parameters. When that happens,
+        // a compile error has already been reported, but we need to make sure we
+        // don't overflow the string too, hence the MAX_PARAMETERS check.
+        for (int i = 0; i < numParams && i < MAX_PARAMETERS; i++)
+        {
+            if (i > 0) name[(*length)++] = ',';
+            name[(*length)++] = '_';
+        }
+        name[(*length)++] = rightBracket;
+         */
+    }
+
+    @Deprecated
     void error(String message) {
         //TODO::implement
         System.err.println(message);

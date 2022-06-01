@@ -2,6 +2,7 @@ package com.wrenj.vm.WrenCompiler;
 
 import com.wrenj.vm.WrenVM.Obj;
 import com.wrenj.vm.WrenValue.ObjModule;
+import com.wrenj.vm.unimplemented.ByteBuffer;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 public class ObjFn {
     Obj obj;
 
-    ArrayList<Character> code;
+    ByteBuffer code;
     ArrayList<Integer> constants;
 
     // The module where this function was defined.
