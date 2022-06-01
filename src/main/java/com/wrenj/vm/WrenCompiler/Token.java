@@ -6,7 +6,7 @@ public class Token {
     public TokenType type;
 
     // The beginning of the token, pointing directly into the source.
-    public long start;
+    public int start;
 
     // The length of the token in characters.
     public int length;

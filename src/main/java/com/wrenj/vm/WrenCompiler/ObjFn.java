@@ -26,7 +26,7 @@ public class ObjFn {
     int maxSlots;
 
     // The number of upvalues this function closes over.
-    int numUpvalues;
+    public int numUpvalues;
 
     // The number of parameters this function expects. Used to ensure that .call
     // handles a mismatch between number of parameters and arguments. This will

@@ -15,7 +15,7 @@ public class Parser {
     public ObjModule module;
 
     // The source code being parsed.
-    String source;
+    public String source;
 
     // The beginning of the currently-being-lexed token in [source].
     int tokenStart;
@@ -29,13 +29,13 @@ public class Parser {
     int currentLine;
 
     // The upcoming token.
-    Token next;
+    public Token next;
 
     // The most recently lexed token.
-    Token current;
+    public Token current;
 
     // The most recently consumed/advanced token.
-    Token previous;
+    public Token previous;
 
     // Tracks the lexing state when tokenizing interpolated strings.
     //
@@ -57,7 +57,7 @@ public class Parser {
     boolean printErrors;
 
     // If a syntax or compile error has occurred.
-    boolean hasError;
+    public boolean hasError;
 
 
 
@@ -267,7 +267,7 @@ public class Parser {
         System.exit(-1);
     }
 
-    void nextToken() {
+    public void nextToken() {
         this.previous = this.current;
         this.current = this.next;
 
@@ -445,7 +445,6 @@ public class Parser {
                     return;
             }
         }
-
     }
 
 }
