@@ -15,6 +15,6 @@ public class Token {
     public int line;
 
     // The parsed value if the token is a literal.
-    Value value;
+    public Value value;
 
 }
