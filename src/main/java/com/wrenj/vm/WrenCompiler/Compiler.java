@@ -5,8 +5,10 @@ import com.wrenj.vm.WrenCompiler.lexing.Parser;
 import com.wrenj.vm.WrenVM.Obj;
 import com.wrenj.vm.WrenVM.WrenVM;
 import com.wrenj.vm.WrenValue.Value;
+import com.wrenj.vm.WrenValue.ValueType;
 import com.wrenj.vm.unimplemented.Code;
 import com.wrenj.vm.unimplemented.GrammarRule;
+import com.wrenj.vm.unimplemented.ObjMap;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -22,9 +24,9 @@ public class Compiler {
 
     // The compiler for the function enclosing this one, or NULL if it's the
     // top level.
-    Optional<Compiler> parent = Optional.empty();
+    Optional<Compiler> parent;
 
-    // The currently in scope local variables.
+    // The currently in-scope local variables.
     Local[] locals = new Local[MAX_LOCALS];
 
     // The number of local variables currently in scope.
@@ -55,15 +57,15 @@ public class Compiler {
     Optional<Loop> loop = Optional.empty();
 
     // If this is a compiler for a method, keeps track of the class enclosing it.
-    Optional<ClassInfo> enclosingClass = Optional.empty();
+    Optional<ClassInfo> enclosingClass;
 
     // The function being compiled.
     ObjFn fn = null;
 
     // The constants for the function being compiled.
-    Optional<ArrayList<Obj>> constants = Optional.empty();
+    Optional<ArrayList<Obj>> constants;
 
-    // Whether or not the compiler is for a constructor initializer
+    // Whether the compiler is for a constructor initializer
     boolean isInitializer;
 
     // The number of attributes seen while parsing.
@@ -73,7 +75,8 @@ public class Compiler {
     // anywhere other than methods or classes.
     int numAttributes;
     // Attributes for the next class or method.
-    Optional<ArrayList<Obj>> attributes = Optional.empty();
+    Optional<ArrayList<Obj>> attributes;
+
     public Compiler(Parser parser, Optional<Compiler> parent, boolean isMethod) {
         this.parser = parser;
         this.parent = parent;
@@ -111,6 +114,73 @@ public class Compiler {
         this.numAttributes = 0;
         this.attributes = Optional.of(new ArrayList<>());
         this.fn = new ObjFn(this.parser.module, this.numLocals);
+    }
+
+    // Throw an error if any attributes were found preceding,
+    // and clear the attributes so the error doesn't keep happening
+    // TODO::implement
+    @Deprecated
+    void disallowAttributes() {
+        if (this.numAttributes > 0) {
+            error("Attributes can only specified before a class or a method");
+            // wrenMapClear(compiler->parser->vm, compiler->attributes);
+            this.numAttributes = 0;
+        }
+    }
+
+    // Add an attribute to a given group in the compiler attributes map
+    // TODO::implement
+    @Deprecated
+    void addToAttributeGroup(Value group, Value key, Value value) {
+        WrenVM vm = this.parser.vm;
+
+        if (group.type == ValueType.VAL_OBJ) {
+            vm.wrenPushRoot(group.as.obj);
+        }
+
+        if (key.type == ValueType.VAL_OBJ) {
+            vm.wrenPushRoot(key.as.obj);
+        }
+
+        if (value.type == ValueType.VAL_OBJ) {
+            vm.wrenPushRoot(key.as.obj);
+        }
+
+        /*
+        Value groupMapValue = wrenMapGet(this.attributes, group);
+
+        if (IS_UNDEFINED(groupMapValue)) {
+            groupMapValue = OBJ_VAL(wrenNewMap(vm));
+            wrenMapSet(vm, compiler.attributes, group, groupMapValue);
+        }
+         */
+
+        System.exit(-1);
+    }
+
+    // Emit the final ClassAttributes that exists at runtime
+    // TODO::implement
+    @Deprecated
+    void emitClassAttributes(ClassInfo classInfo) {
+        System.exit(-1);
+    }
+
+    // Copy the current attributes stored in the compiler into a destination map
+    // This also resets the counter, since the intent is to consume the attributes
+    // TODO::implement
+    @Deprecated
+    void copyAttributes(ObjMap into) {
+        this.numAttributes = 0;
+
+        if (this.attributes.stream().findAny().isEmpty()) {
+            return;
+        } else if (into == null) {
+            return;
+        }
+
+        WrenVM vm = this.parser.vm;
+
+        System.exit(-1);
     }
 
     int addConstant(Value constant) {
