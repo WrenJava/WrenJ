@@ -3,7 +3,6 @@ package com.wrenj.vm.unimplemented;
 import com.wrenj.vm.WrenCompiler.TokenType;
 import com.wrenj.vm.WrenCompiler.grammar.Precedence;
 
-import java.util.function.BiConsumer;
 @Deprecated
 public class GrammarRule {
     GrammarFn prefix;
@@ -11,11 +10,21 @@ public class GrammarRule {
     SignatureFn method;
     Precedence precedence;
     String name;
+
+
     static {
         System.exit(-1);
     }
-    public GrammarRule() {
-        System.exit(-1);
+
+    public GrammarRule(GrammarFn prefix, GrammarFn infix, SignatureFn method, Precedence precedence, String name) {
+        this.prefix = prefix;
+        this.infix = infix;
+        this.method = method;
+        this.precedence = precedence;
+        this.name = name;
     }
 
+    public GrammarRule getRule(TokenType type) {
+        return this;
+    }
 }
