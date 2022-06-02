@@ -256,11 +256,26 @@ public class WrenVM {
     }
 
 
-    //TODO::fix the parameters
     @Deprecated
-    private void wrenGrayObj(Object object) {
-        //TODO::implement this
-        System.exit(-1);
+    private void wrenGrayObj(Obj obj) {
+        if (obj == null) { return; }
+
+        // Stop if the object is already darkened, so it doesn't get stuck in a cycle
+        if (obj.isDark) { return; }
+
+        // TODO::Document better
+        // It's been reached
+        obj.isDark = true;
+
+        // Add it to the gray list so it can be explored for more marks later
+        if (this.grayCount >= this.grayCapacity) {
+            this.grayCapacity = this.grayCount * 2;
+            // TODO::implement this
+            System.exit(-1);
+            // this.gray = (Obj**)this.config.reallocateFn(this.gray, this.grayCapacity * sizeof(Obj*), this.config.userData);
+        }
+
+        this.gray.set(this.grayCount++, obj);
     }
 
     @Deprecated

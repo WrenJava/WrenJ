@@ -7,5 +7,4 @@ public class WrenReallocateFn {
     public WrenReallocateFn() {
         System.exit(-1);
     }
-
 }

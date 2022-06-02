@@ -2,6 +2,7 @@ package com.wrenj.vm.WrenVM;
 
 import java.util.Optional;
 
+// Base struct for all heap-allocated objects.
 public class Obj {
     ObjType type;
     boolean isDark;

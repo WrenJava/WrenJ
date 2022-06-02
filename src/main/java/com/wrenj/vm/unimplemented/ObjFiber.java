@@ -2,6 +2,7 @@ package com.wrenj.vm.unimplemented;
 
 import com.wrenj.vm.WrenVM.FiberState;
 import com.wrenj.vm.WrenVM.Obj;
+import com.wrenj.vm.WrenValue.CallFrame;
 import com.wrenj.vm.WrenValue.Value;
 
 import java.util.Optional;
