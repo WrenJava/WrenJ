@@ -7,7 +7,9 @@ import com.wrenj.vm.WrenVM.WrenVM;
 import com.wrenj.vm.WrenValue.Value;
 import com.wrenj.vm.WrenValue.ValueType;
 import com.wrenj.vm.WrenVM.Code;
+import com.wrenj.vm.unimplemented.GrammarFn;
 import com.wrenj.vm.unimplemented.GrammarRule;
+import com.wrenj.vm.unimplemented.GrammarRules;
 import com.wrenj.vm.unimplemented.ObjMap;
 
 import java.util.ArrayList;
@@ -215,7 +217,7 @@ public class Compiler {
     }
 
     // Consumes the current token. Emits an error if its type is not [expected].
-    void consume(TokenType expected, String errorMessage) {
+    public void consume(TokenType expected, String errorMessage) {
         parser.nextToken();
         if (this.parser.previous.type != expected) {
             error(errorMessage);
@@ -664,9 +666,8 @@ public class Compiler {
         return null;
     }
     @Deprecated
-    void expression() {
-        //TODO::implement is forward declaration
-        System.exit(-1);
+    public void expression() {
+        parsePrecedence(Precedence.PREC_LOWEST);
     }
     @Deprecated
     void statement() {
@@ -680,8 +681,37 @@ public class Compiler {
     }
     @Deprecated
     void parsePrecedence(Precedence precedence) {
-        //TODO::implement is forward declaration
+        //TODO::implement
         System.exit(-1);
+
+        GrammarRule[] rules = new GrammarRules().grammarRules;
+        this.parser.nextToken();
+        GrammarFn prefix = rules[this.parser.previous.type.ordinal()].prefix;
+
+        // Does *everything* have to be optional?
+        /*
+            if (prefix == NULL)
+            {
+                error(compiler, "Expected expression.");
+                return;
+            }
+         */
+
+        // Track if the precendence of the surrounding expression is low enough to
+        // allow an assignment inside this one. We can't compile an assignment like
+        // a normal expression because it requires us to handle the LHS specially --
+        // it needs to be an lvalue, not an rvalue. So, for each of the kinds of
+        // expressions that are valid lvalues -- names, subscripts, fields, etc. --
+        // we pass in whether or not it appears in a context loose enough to allow
+        // "=". If so, it will parse the "=" itself and handle it appropriately.
+        boolean canAssign = precedence <= Precedence.PREC_CONDITIONAL;
+        prefix(canAssign);
+
+        while (precedence <= rules[this.parser.current.type.ordinal()].precedence) {
+            this.parser.nextToken();
+            GrammarFn infix = rules[this.parser.previous.type.ordinal()].infix;
+            infix(canAssign);
+        }
     }
 
     // Replaces the placeholder argument for a previous CODE_JUMP or CODE_JUMP_IF
