@@ -1,13 +1,12 @@
 package com.wrenj.vm.WrenCompiler;
 
-import com.wrenj.vm.WrenCommon;
 import com.wrenj.vm.WrenCompiler.grammar.Precedence;
 import com.wrenj.vm.WrenCompiler.lexing.Parser;
 import com.wrenj.vm.WrenVM.Obj;
 import com.wrenj.vm.WrenVM.WrenVM;
 import com.wrenj.vm.WrenValue.Value;
 import com.wrenj.vm.WrenValue.ValueType;
-import com.wrenj.vm.unimplemented.Code;
+import com.wrenj.vm.WrenVM.Code;
 import com.wrenj.vm.unimplemented.GrammarRule;
 import com.wrenj.vm.unimplemented.ObjMap;
 
