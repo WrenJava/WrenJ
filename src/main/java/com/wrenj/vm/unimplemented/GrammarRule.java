@@ -5,11 +5,11 @@ import com.wrenj.vm.WrenCompiler.grammar.Precedence;
 
 @Deprecated
 public class GrammarRule {
-    GrammarFn prefix;
-    GrammarFn infix;
-    SignatureFn method;
-    Precedence precedence;
-    String name;
+    public GrammarFn prefix;
+    public GrammarFn infix;
+    public SignatureFn method;
+    public Precedence precedence;
+    public String name;
 
 
     static {
